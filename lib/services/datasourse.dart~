@@ -33,7 +33,6 @@ class AuthRepository {
   Future<List<Movie>> fetchMovies() async {
     try {
       final response = await _dio.get('https://api.sampleapis.com/movies/animation');
-      print("list response$response");
       return (response.data as List)
           .map((movieJson) => Movie.fromJson(movieJson))
           .toList();

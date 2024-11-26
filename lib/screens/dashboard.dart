@@ -2,7 +2,10 @@ import 'package:cineVerse/screens/favorites_screen.dart';
 import 'package:cineVerse/screens/home_screen.dart';
 import 'package:cineVerse/screens/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../services/movie/movie_bloc.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -10,12 +13,17 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    print("called api");
+    context.read<MovieBloc>().add(FetchMovies());
+    super.initState();
+  }
   int _currentIndex = 0;
 
   // List of pages corresponding to the BottomNavigationBar items
   final List<Widget> _pages = [
     HomeScreen(),
-    FavoritesScreen(),
     ProfileScreen(),
   ];
 
@@ -47,10 +55,6 @@ class _DashboardState extends State<Dashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

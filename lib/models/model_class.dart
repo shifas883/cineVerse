@@ -62,3 +62,22 @@ class LoginResponse {
     };
   }
 }
+
+
+class Movie {
+  final int id;
+  final String title;
+  final String posterURL;
+  final String imdbId;
+
+  Movie({required this.title,required this.imdbId, required this.posterURL,required this.id});
+
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
+      imdbId: json['imdbId'],
+      title: json['title'],
+      id: json['id'],
+      posterURL: json['posterURL'],
+    );
+  }
+}

@@ -1,7 +1,15 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cineVerse/common_widgets/movie_card.dart';
+import 'package:cineVerse/screens/movie_details.dart';
+import 'package:cineVerse/services/movie/movie_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../models/model_class.dart';
+import 'favorites_screen.dart';
+import 'full_movie_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   final List<String> imageUrls = [
     'https://wallpapercave.com/wp/wp1946074.jpg',
     'https://img00.deviantart.net/5aee/i/2017/215/9/6/justice_league_movie_banner_poster_by_arkhamnatic-dbir20a.png',
@@ -28,11 +37,25 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final CarouselSliderController _controller = CarouselSliderController();
 
+  List<Movie> movies = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<MovieBloc, MovieState>(
+  listener: (context, state) {
+    if(state is MovieLoading){
+      print("loading");
+    }
+    if(state is MovieLoaded){
+      movies=state.movies??[];
+      setState(() {
+
+      });
+    }
+    // TODO: implement listener
+  },
+  child: Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
@@ -91,59 +114,103 @@ class _HomeScreenState extends State<HomeScreen> {
               }).toList(),
             ),
             const SizedBox(height: 20),
-            // Horizontal ListView
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Global Trending",
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500
+                  ),),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const FullMovieList()));
+                    },
+                    child: Text("View all",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFFFF7643)
+                    ),),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
-              height: 200, // Adjust height based on your design
+              height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: movieTitles.length,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                itemCount: movies.length>=5?5:movies.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Container(
-                      height: 100,width: 130,
-                      color: Colors.red,
-                      child: Column(
-                        children: [
-                          Image.network(
-                            "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
-                            height: 120,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "name",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              '10',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      ),
-                    )
-
+                  return MovieCard(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                              MovieDetails(movie: movies[index],)));
+                    },
+                    imdb: movies[index].imdbId,
+                    name: movies[index].title,
+                    imageUrl: movies[index].posterURL,
                   );
                 },
               ),
             ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Recently Viewed",
+                    style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500
+                    ),),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                          const FavoritesScreen()));
+                    },
+                    child: Text("View all",
+                      style: GoogleFonts.roboto(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFFFF7643)
+                      ),),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 220,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                itemCount: movies.length>=5?5:movies.length,
+                itemBuilder: (context, index) {
+                  return MovieCard(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                              MovieDetails(movie: movies[index],)));
+                    },
+                    imdb: movies[index].imdbId,
+                    name: movies[index].title,
+                    imageUrl: movies[index].posterURL,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 100),
           ],
         ),
       ),
-    );
+    ),
+);
   }
 }

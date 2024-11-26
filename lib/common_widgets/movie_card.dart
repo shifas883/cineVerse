@@ -1,74 +1,72 @@
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatelessWidget {
+class MovieCard extends StatelessWidget {
   final String name;
-  final String price;
+  final String imdb;
+  final VoidCallback onTap;
   final String imageUrl;
 
-  const ProductCard({
+  const MovieCard({
     super.key,
     required this.name,
-    required this.price,
+    required this.onTap,
+    required this.imdb,
     required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.network(
-              imageUrl,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 130,
+
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey,width: 0.2),
+        ),
+        margin: EdgeInsets.only(right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
               height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  topLeft: Radius.circular(10),
+                ),
+                image: DecorationImage(image: NetworkImage(imageUrl),fit: BoxFit.cover),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              price,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.green,
-                fontWeight: FontWeight.w600,
+            Container(
+              height: 60,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add button functionality here
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$name added to cart!')),
-                  );
-                },
-                child: const Text("Add to Cart"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                "IMDB ID: ${imdb}",
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
-        ],
+
+          ],
+        ),
       ),
     );
   }
