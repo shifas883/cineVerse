@@ -65,32 +65,19 @@ class LoginResponse {
 
 
 class Movie {
+  final int id;
   final String title;
-  final String imdbId;
   final String posterURL;
+  final String imdbId;
 
-  Movie({
-    required this.title,
-    required this.imdbId,
-    required this.posterURL,
-  });
+  Movie({required this.title,required this.imdbId, required this.posterURL,required this.id});
 
-  /// Convert a Movie object to a JSON map
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'imdbId': imdbId,
-      'posterURL': posterURL,
-    };
-  }
-
-  /// Create a Movie object from a JSON map
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
-      title: json['title'],
       imdbId: json['imdbId'],
+      title: json['title'],
+      id: json['id'],
       posterURL: json['posterURL'],
     );
   }
 }
-

@@ -30,12 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'https://img1.hotstarext.com/image/upload/f_auto/sources/r1/cms/prod/4298/674298-h',
   ];
 
-  @override
-  void initState() {
-    print("called api");
-    context.read<MovieBloc>().add(FetchMovies());
-    super.initState();
-  }
+
   int _currentIndex = 0;
   final CarouselSliderController _controller = CarouselSliderController();
 

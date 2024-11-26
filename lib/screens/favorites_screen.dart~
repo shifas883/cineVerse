@@ -9,14 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/movie/movie_bloc.dart';
 
-class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({super.key});
+class FullMovieList extends StatefulWidget {
+  const FullMovieList({super.key});
 
   @override
-  State<FavoritesScreen> createState() => _FavoritesScreenState();
+  State<FullMovieList> createState() => _FullMovieListState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> {
+class _FullMovieListState extends State<FullMovieList> {
   List<Movie> movies = [];
   List<Movie> filteredMovies = [];
   TextEditingController searchController = TextEditingController();

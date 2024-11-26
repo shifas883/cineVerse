@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cineVerse/models/model_class.dart';
 import 'package:cineVerse/screens/movie_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/movie/movie_bloc.dart';
 
@@ -14,15 +17,51 @@ class FullMovieList extends StatefulWidget {
 }
 
 class _FullMovieListState extends State<FullMovieList> {
-  @override
-  void initState() {
-    context.read<MovieBloc>().add(FetchMovies());
-    super.initState();
-  }
-
   List<Movie> movies = [];
   List<Movie> filteredMovies = [];
   TextEditingController searchController = TextEditingController();
+  List<Movie> favoriteMovies = []; // List to store favorite movies
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<MovieBloc>().add(FetchMovies());
+    _loadFavorites(); // Load favorite movies on init
+  }
+
+  /// Load favorite movies from SharedPreferences
+  Future<void> _loadFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedFavorites = prefs.getString('favoriteMovies');
+    if (storedFavorites != null) {
+      List decoded = jsonDecode(storedFavorites);
+      setState(() {
+        favoriteMovies =
+            decoded.map((movieJson) => Movie.fromJson(movieJson)).toList();
+      });
+    }
+  }
+
+  /// Save favorite movies to SharedPreferences
+  Future<void> _saveFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedFavorites =
+    jsonEncode(favoriteMovies.map((movie) => movie.toJson()).toList());
+    print(";;;;;;;$favoriteMovies");
+    await prefs.setString('favoriteMovies', encodedFavorites);
+  }
+
+  /// Toggle favorite status of a movie
+  void _toggleFavorite(Movie movie) {
+    setState(() {
+      if (favoriteMovies.any((m) => m.imdbId == movie.imdbId)) {
+        favoriteMovies.removeWhere((m) => m.imdbId == movie.imdbId);
+      } else {
+        favoriteMovies.add(movie);
+      }
+      _saveFavorites();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +82,7 @@ class _FullMovieListState extends State<FullMovieList> {
           title: Text(
             "Movie List",
             style: GoogleFonts.roboto(
-              color: Color(0xFFFF7643),
+              color: const Color(0xFFFF7643),
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
@@ -61,14 +100,14 @@ class _FullMovieListState extends State<FullMovieList> {
                 controller: searchController,
                 decoration: InputDecoration(
                   hintText: 'Search Movies',
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xFFFF7643)),
+                    borderSide: const BorderSide(color: Color(0xFFFF7643)),
                   ),
                 ),
                 onChanged: (value) {
@@ -86,16 +125,23 @@ class _FullMovieListState extends State<FullMovieList> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: filteredMovies.length,
                 itemBuilder: (BuildContext context, int index) {
+                  Movie movie = filteredMovies[index];
+                  bool isFavorite =
+                  favoriteMovies.any((m) => m.imdbId == movie.imdbId);
+
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) =>
-                              MovieDetails(movie: filteredMovies[index],)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MovieDetails(movie: movie),
+                        ),
+                      );
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(5),
@@ -110,21 +156,19 @@ class _FullMovieListState extends State<FullMovieList> {
                             width: 75,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image:
-                                NetworkImage(filteredMovies[index].posterURL),
+                                image: NetworkImage(movie.posterURL),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           const SizedBox(width: 10),
                           // Movie Info
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: w / 1.7,
-                                child: Text(
-                                  filteredMovies[index].title,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie.title,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.roboto(
@@ -132,9 +176,19 @@ class _FullMovieListState extends State<FullMovieList> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ),
-                              Text(filteredMovies[index].imdbId),
-                            ],
+                                Text(movie.imdbId),
+                              ],
+                            ),
+                          ),
+                          // Favorite Icon
+                          IconButton(
+                            icon: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              color: isFavorite ? Colors.red : Colors.grey,
+                            ),
+                            onPressed: () {
+                              _toggleFavorite(movie);
+                            },
                           ),
                         ],
                       ),

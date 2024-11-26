@@ -1,5 +1,4 @@
 import 'package:cineVerse/common_widgets/button.dart';
-import 'package:cineVerse/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../cache/save_user_data.dart';
@@ -58,11 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: 200,
                 child: ConfirmButton(text: "Logout", onTap: () {
                   clearLoginData();
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignInScreen()), // Replace with your login screen
-                        (route) => false, // Clear the back stack
-                  );
+                  
                 }))
           ],
         ),
