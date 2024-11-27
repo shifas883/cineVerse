@@ -75,7 +75,7 @@ class Movie {
     required this.posterURL,
   });
 
-  /// Convert a Movie object to a JSON map
+
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -84,7 +84,6 @@ class Movie {
     };
   }
 
-  /// Create a Movie object from a JSON map
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
       title: json['title'],

@@ -21,7 +21,7 @@ class AudenticationBloc extends Bloc<AudenticationEvent, AudenticationState> {
         emit(AuthSuccess(response));
 
       } catch (e) {
-        print("reeeee$e");
+
         emit(AuthFailure(e.toString()));
       }
     });

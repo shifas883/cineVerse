@@ -1,7 +1,5 @@
 import 'package:cineVerse/cache/save_user_data.dart';
 import 'package:cineVerse/screens/dashboard.dart';
-import 'package:cineVerse/screens/home_screen.dart';
-import 'package:cineVerse/screens/login_screen.dart';
 import 'package:cineVerse/screens/splash_screen.dart';
 import 'package:cineVerse/services/authentication/audentication_bloc.dart';
 import 'package:cineVerse/services/datasourse.dart';
@@ -19,7 +17,6 @@ class MyApp extends StatelessWidget {
   final bool isLoggedIn;
   const MyApp({super.key, required this.isLoggedIn});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -33,7 +30,6 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

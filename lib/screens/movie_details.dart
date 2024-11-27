@@ -1,7 +1,6 @@
 import 'package:cineVerse/common_widgets/button.dart';
 import 'package:cineVerse/models/model_class.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MovieDetails extends StatefulWidget {
@@ -19,7 +18,7 @@ class _MovieDetailsState extends State<MovieDetails> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      backgroundColor: const Color(0xFFF5F6F9),
+      backgroundColor:  Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -66,7 +65,6 @@ class _MovieDetailsState extends State<MovieDetails> {
                     color: Colors.green,
                     fontSize: 14
                 ),
-                // style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ],
@@ -151,72 +149,3 @@ class _ProductImagesState extends State<ProductImages> {
   }
 }
 
-class RoundedIconBtn extends StatelessWidget {
-  const RoundedIconBtn({
-    Key? key,
-    required this.icon,
-    required this.press,
-    this.showShadow = false,
-  }) : super(key: key);
-
-  final IconData icon;
-  final GestureTapCancelCallback press;
-  final bool showShadow;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          if (showShadow)
-            BoxShadow(
-              offset: const Offset(0, 6),
-              blurRadius: 10,
-              color: const Color(0xFFB0B0B0).withOpacity(0.2),
-            ),
-        ],
-      ),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: const Color(0xFFFF7643),
-          padding: EdgeInsets.zero,
-          backgroundColor: Colors.white,
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        ),
-        onPressed: press,
-        child: Icon(icon),
-      ),
-    );
-  }
-}
-
-class Product {
-  final int id;
-  final String title, description;
-  final List<String> images;
-  final List<Color> colors;
-  final double rating, price;
-  final bool isFavourite, isPopular;
-
-  Product({
-    required this.id,
-    required this.images,
-    required this.colors,
-    this.rating = 0.0,
-    this.isFavourite = false,
-    this.isPopular = false,
-    required this.title,
-    required this.price,
-    required this.description,
-  });
-}
-
-const heartIcon =
-'''<svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M16.5266 8.61383L9.27142 15.8877C9.12207 16.0374 8.87889 16.0374 8.72858 15.8877L1.47343 8.61383C0.523696 7.66069 0 6.39366 0 5.04505C0 3.69644 0.523696 2.42942 1.47343 1.47627C2.45572 0.492411 3.74438 0 5.03399 0C6.3236 0 7.61225 0.492411 8.59454 1.47627C8.81857 1.70088 9.18143 1.70088 9.40641 1.47627C11.3691 -0.491451 14.5629 -0.491451 16.5266 1.47627C17.4763 2.42846 18 3.69548 18 5.04505C18 6.39366 17.4763 7.66165 16.5266 8.61383Z" fill="#DBDEE4"/>
-</svg>
-''';

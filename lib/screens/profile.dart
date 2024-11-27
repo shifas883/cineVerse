@@ -1,6 +1,7 @@
 import 'package:cineVerse/common_widgets/button.dart';
 import 'package:cineVerse/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../cache/save_user_data.dart';
 import '../models/model_class.dart';
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadProfileData() async {
-    final data = await getLoginData(); // Fetch the saved data
+    final data = await getLoginData();
     setState(() {
       loginData = data;
     });
@@ -36,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
              ProfilePic(image: loginData?.image ?? ''),
+            loginData?.firstName?.toString()==null?Container():
             Text(
               "${loginData?.firstName?.toString()} ${loginData?.lastName?.toString()}" ?? '',
               style: Theme.of(context).textTheme.titleLarge,
@@ -56,13 +58,143 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 100.0),
             Container(
               width: 200,
-                child: ConfirmButton(text: "Logout", onTap: () {
-                  clearLoginData();
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignInScreen()), // Replace with your login screen
-                        (route) => false, // Clear the back stack
-                  );
+                child: ConfirmButton(text: "Logout",
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            double h = MediaQuery.of(context).size.height;
+                            double w = MediaQuery.of(context).size.width;
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10)),
+                              surfaceTintColor: Colors.white,
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    width: w,
+                                    // height: h/7,
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Confirm",
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.black,
+                                        fontSize: w / 24,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Are you sure you want to logout from this application ?",
+                                    style: GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: w / 28,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Container(
+                                            width: w / 3.3,
+                                            padding:
+                                            EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  5),
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color:
+                                                  Color(0x26000000)
+                                                      .withOpacity(
+                                                      0.05)),
+                                              color: Colors.white,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                "Cancel",
+                                                textAlign:
+                                                TextAlign.center,
+                                                style:
+                                                GoogleFonts.poppins(
+                                                  color:
+                                                  Color(0xffa9a8a8),
+                                                  fontSize: w / 26,
+                                                  fontWeight:
+                                                  FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            clearLoginData();
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => SignInScreen()), // Replace with your login screen
+                                                  (route) => false, // Clear the back stack
+                                            );
+                                          },
+                                          child: Container(
+                                            width: w / 3.1,
+                                            padding:
+                                            EdgeInsets.symmetric(
+                                                vertical: 13),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  5),
+                                              gradient: LinearGradient(
+                                                begin:
+                                                Alignment.topCenter,
+                                                end: Alignment
+                                                    .bottomCenter,
+                                                colors: [
+                                                   Color(0xFFFF7643),
+                                                   Color(0xFFFF7643),
+                                                ],
+                                              ),
+                                            ),
+                                            child: Text(
+                                              "Logout",
+                                              textAlign:
+                                              TextAlign.center,
+                                              style: GoogleFonts.roboto(
+                                                color: Colors.white,
+                                                fontSize: w / 26,
+                                                fontWeight:
+                                                FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                                  SizedBox(
+                                    height: h / 80,
+                                  )
+                                ],
+                              ),
+                            );
+                          });
+
                 }))
           ],
         ),

@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    print("called api");
+
     context.read<MovieBloc>().add(FetchMovies());
     super.initState();
   }
@@ -64,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       });
     }
-    // TODO: implement listener
   },
   child: Scaffold(
       backgroundColor: Colors.white,
@@ -173,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            favMovies.isEmpty?Container():
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
               child: Row(

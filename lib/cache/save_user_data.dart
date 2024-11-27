@@ -22,7 +22,6 @@ Future<LoginResponse?> getLoginData() async {
 
   final accessToken = prefs.getString('accessToken');
   if (accessToken == null || accessToken.isEmpty) {
-    // No login data found
     return null;
   }
 

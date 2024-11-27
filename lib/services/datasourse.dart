@@ -18,7 +18,6 @@ class AuthRepository {
     );
 
     if (response.statusCode == 200) {
-      // Convert the JSON response to LoginResponse
       final loginResponse = LoginResponse.fromJson(response.data);
 
       print('Access Token: ${loginResponse.accessToken}');

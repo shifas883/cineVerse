@@ -77,8 +77,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       const Spacer(flex: 3),
                       ConfirmButton(text: "Continue", onTap: (){
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignInScreen()));
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => SignInScreen()),
+                        );
+
                       }),
                       const Spacer(),
                     ],
